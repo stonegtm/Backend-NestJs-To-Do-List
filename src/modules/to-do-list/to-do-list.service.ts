@@ -1,42 +1,90 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateToDoListDto } from './dto/create-to-do-list.dto';
 import { UpdateToDoListDto } from './dto/update-to-do-list.dto';
-import { CreateToDoListService } from 'src/usecases/to-do-list/create-to-do-list/create-to-do-list.service';
-import { DeleteToDoListService } from 'src/usecases/to-do-list/delete-to-do-list/delete-to-do-list.service';
-import { GetOneToDoListService } from 'src/usecases/to-do-list/get-one-to-do-list/get-one-to-do-list.service';
-import { UpdateToDoListService } from 'src/usecases/to-do-list/update-to-do-list/update-to-do-list.service';
-import { GetToDoListService } from 'src/usecases/to-do-list/get-to-do-list/get-to-do-list.service';
+
+import { Todo } from 'src/common/type';
 
 @Injectable()
 export class ToDoListService {
-  constructor(
-    private readonly create_to_do_list_service: CreateToDoListService,
-    private readonly delete_to_do_list_service: DeleteToDoListService,
-    private readonly get_one_to_do_list_service: GetOneToDoListService,
-    private readonly get_to_do_list_service: GetToDoListService,
-    private readonly update_to_do_list_service: UpdateToDoListService,
-  ) {}
-  create(createToDoListDto: CreateToDoListDto) {
+  constructor() {}
+  private todos: Todo[] = [];
+  private countId = 1;
+
+  async create(createToDoListDto: CreateToDoListDto) {
     try {
-      return this.create_to_do_list_service.execute()
+      const todo: Todo = {
+        id: this.countId++,
+        ...createToDoListDto,
+      };
+      this.todos.push(todo);
+      return {
+        result: true,
+        status: 201,
+        message: 'Create success.',
+        data: todo,
+      };
     } catch (error) {
       throw new BadRequestException(error);
     }
   }
 
   findAll() {
-    return `This action returns all toDoList`;
+    try {
+      return { result: true, status: 200, data: this.todos };
+    } catch (error) {
+      throw new BadRequestException(error);
+    }
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} toDoList`;
+    try {
+      const todo = this.todos.find((f) => f.id === id);
+      if (!todo) {
+        throw new NotFoundException(`Todo with id ${id} not found`);
+      }
+      return {
+        result: true,
+        status: 200,
+        data: todo,
+      };
+    } catch (error) {
+      throw new BadRequestException(error);
+    }
   }
 
   update(id: number, updateToDoListDto: UpdateToDoListDto) {
-    return `This action updates a #${id} toDoList`;
+    try {
+      const index = this.todos.findIndex((todo) => todo.id === id);
+      if (index === -1) {
+        throw new NotFoundException(`Todo with id ${id} not found`);
+      }
+      const updatedTodo = { ...this.todos[index], ...updateToDoListDto };
+      this.todos[index] = updatedTodo;
+      return {
+        result: true,
+        status: 204,
+        message: 'Update success.',
+        data: updatedTodo,
+      };
+    } catch (error) {
+      throw new BadRequestException(error);
+    }
   }
 
   remove(id: number) {
-    return `This action removes a #${id} toDoList`;
+    try {
+      const index = this.todos.findIndex((todo) => todo.id === id);
+      if (index === -1) {
+        throw new NotFoundException(`Todo with id ${id} not found`);
+      }
+      this.todos.splice(index, 1);
+      return { result: true, status: 204, message: 'Delete success.' };
+    } catch (error) {
+      throw new BadRequestException(error);
+    }
   }
 }

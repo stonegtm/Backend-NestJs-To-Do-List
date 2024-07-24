@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { ToDoListService } from './to-do-list.service';
 import { CreateToDoListDto } from './dto/create-to-do-list.dto';
 import { UpdateToDoListDto } from './dto/update-to-do-list.dto';
@@ -18,12 +26,15 @@ export class ToDoListController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.toDoListService.findOne(+id);
+  findOne(@Param('id') id: number) {
+    return this.toDoListService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateToDoListDto: UpdateToDoListDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateToDoListDto: UpdateToDoListDto,
+  ) {
     return this.toDoListService.update(+id, updateToDoListDto);
   }
 

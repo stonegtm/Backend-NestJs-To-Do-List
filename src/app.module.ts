@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ToDoListModule } from './modules/to-do-list/to-do-list.module';
-import { UsecasesModule } from './usecases/to-do-list/usecases.module';
 import { ConfigModule } from '@nestjs/config';
 
 @Module({
@@ -12,7 +11,6 @@ import { ConfigModule } from '@nestjs/config';
       isGlobal: true, // Make the configuration global if needed
     }),
     ToDoListModule,
-    UsecasesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

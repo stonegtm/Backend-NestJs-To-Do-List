@@ -1,7 +1,9 @@
-import { IsString, IsOptional, IsBoolean, Length } from 'class-validator';
+import { IsString, IsOptional, IsBoolean, Length, IsNotEmpty } from 'class-validator';
 
 export class CreateToDoListDto {
   @IsString()
+  @IsNotEmpty()
+  @Length(1, 255)
   title: string;
 
   @IsString()
