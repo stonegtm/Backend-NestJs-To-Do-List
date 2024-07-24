@@ -8,7 +8,7 @@ import { ConfigModule } from '@nestjs/config';
   imports: [
     ConfigModule.forRoot({
       envFilePath: `src/config/env/${process.env.NODE_ENV || 'dev'}.env`,
-      isGlobal: true, // Make the configuration global if needed
+      isGlobal: true,
     }),
     ToDoListModule,
   ],

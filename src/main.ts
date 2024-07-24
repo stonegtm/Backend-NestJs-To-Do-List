@@ -9,9 +9,9 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
   app.useGlobalPipes(
     new ValidationPipe({
-      whitelist: true, // Automatically strip properties that do not have any decorators
-      forbidNonWhitelisted: true, // Throw errors when non-whitelisted properties are provided
-      transform: true, // Automatically transform payloads to DTO instances
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
     }),
   );
   console.log('>>>>>', configService.get<number>('SERVER_PORT'));
